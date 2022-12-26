@@ -1,41 +1,33 @@
 class ProductManager {
     constructor() {
         this.products = [];
-        this.id = 0;
+        this.id = 1;
     }
 
-    addProduct = (title, description, price, thumbnail, code, stock) => {
-        if(title && description && price && thumbnail && code && stock !== undefined) {
-            const product = {
-                title,
-                description,
-                price,
-                thumbnail,
-                code,
-                stock
-            }
+    addProduct = ({title, description, price, thumbnail, code, stock}) => {
+        if(!title || !description || !price || !thumbnail || !code || !stock) return console.log('Producto no agregado: todos los campos son obligatorios');
+            
+        if(this.products.find(prod => prod.code === code)) return console.log('El producto ya está incluido en la base de datos, no se puede agregar nuevamente');
 
-            if(this.products.find(prod => prod.code === code)) {
-                console.log('El producto ya está incluido en la base de datos, no se puede agregar nuevamente')
-            } else {
-                this.products.push(product);
-                console.log('El producto fue agregado exitosamente');
-                this.id++
-                product.id = this.id;
-            }
-           
-        } else {
-            console.log('Producto no agregado: todos los campos son obligatorios');
+        const product = {
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+            id: this.id
         }
+        this.id++
+        this.products.push(product);
+
+        return console.log('El producto fue agregado exitosamente');
     }
 
-    getProducts = () => {
-        this.products.length > 0 ? console.log(this.products) : console.log('La base de datos no contiene productos');
-    }
+    getProducts = () => this.products.length > 0 ? console.log(this.products) : console.log('La base de datos no contiene productos');
+      
+    getProductById = (idRef) => this.products.find(prod => prod.id === idRef) ?? console.log('No se encontró el producto');
 
-    getProductById = (idRef) => {
-        this.products.find(prod => prod.id === idRef) ? console.log(this.products.filter(prod => prod.id === idRef)) : console.log('El producto no se encontró');                    
-    }
 }
 
 
@@ -44,9 +36,33 @@ class ProductManager {
 
 const instancia = new ProductManager();
 
+instancia.addProduct({
+    title: "Casa 4 ambientes", 
+    description: "Con patio", 
+    price: 250000, 
+    thumbnail: "sin imagen", 
+    code: "123abc", 
+    stock: 1
+});
 
-instancia.addProduct("Casa 4 ambientes", "Con patio", 250000, "sin imagen", "123abc", 1);
-instancia.addProduct("Departamento 3 ambientes", "Luminoso", 178000, "sin imagen", "456abc", 2);
-instancia.addProduct("Monoambiente", "Espacioso", 90000, "sin imagen", "679abc", 4);
+instancia.addProduct({
+    title: "Departamento 3 ambientes", 
+    description: "Luminoso", 
+    price: 178000, 
+    thumbnail: "sin imagen", 
+    code: "456abc", 
+    stock: 2
+});
+
+instancia.addProduct({
+    title: "Monoambiente", 
+    description: "Espacioso", 
+    price: 90000, 
+    thumbnail: "sin imagen", 
+    code: "679abc", 
+    stock: 4
+});
+
+
 instancia.getProducts();
-instancia.getProductById(2);
+console.log(instancia.getProductById(2));
