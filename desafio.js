@@ -1,7 +1,10 @@
+const fs = require("fs");
+
 class ProductManager {
     constructor() {
         this.products = [];
         this.id = 1;
+        this.path = './products.json';
     }
 
     addProduct = ({title, description, price, thumbnail, code, stock}) => {
@@ -21,20 +24,91 @@ class ProductManager {
         this.id++
         this.products.push(product);
 
+        const productStr = JSON.stringify(this.products);
+        fs.writeFile(this.path, productStr, error => {
+            if(error) throw error;
+        });
+
         return console.log('El producto fue agregado exitosamente');
     }
 
-    getProducts = () => this.products.length > 0 ? console.log(this.products) : console.log('La base de datos no contiene productos');
-      
-    getProductById = (idRef) => this.products.find(prod => prod.id === idRef) ?? console.log('No se encontró el producto');
+    getProducts = async () => {
+            if(!fs.existsSync(this.path)) return [];
 
+            const data = await fs.promises.readFile(this.path, 'utf-8');
+            this.products = JSON.parse(data);
+            return this.products.length > 0 ? console.log(this.products) : console.log('La base de datos no contiene productos');
+    }
+
+    getProductById = async (idRef) => {
+        if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
+
+        const data = await fs.promises.readFile(this.path, 'utf-8');
+        this.products = JSON.parse(data);
+        const prodById = this.products.find(prod => prod.id === idRef)
+        return prodById ? console.log(prodById) : console.log('No se encontró el producto');
+    }
+
+    updateProduct = async (idRef, {title, description, price, thumbnail, code, stock}) => {
+        if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
+
+        if(!title || !description || !price || !thumbnail || !code || !stock) return console.log('Producto no actualizado: todos los campos son obligatorios');
+
+        const data = await fs.promises.readFile(this.path, 'utf-8');
+        this.products = JSON.parse(data);
+        const selectedProduct = this.products.find(prod => prod.id === idRef);
+                
+        const { id } = selectedProduct;
+        
+        const product = {
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+            id: id
+        }
+        
+        const indexById = this.products.findIndex(prod => prod.id === idRef);
+        this.products.splice(indexById, 1);
+        this.products.push(product);
+
+        const productStr = JSON.stringify(this.products);
+        fs.writeFile(this.path, productStr, error => {
+            if(error) throw error;
+        });
+        
+    }
+    
+    deleteProduct = async (idRef) => {
+        if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
+
+        const data = await fs.promises.readFile(this.path, 'utf-8');
+        this.products = JSON.parse(data);
+        const indexById = this.products.findIndex(prod => prod.id === idRef);
+        this.products.splice(indexById, 1);
+
+        const productStr = JSON.stringify(this.products);
+        fs.writeFile(this.path, productStr, error => {
+            if(error) throw error;
+        });
+
+        console.log('El producto fue eliminado exitosamente')
+    }
 }
 
 
 
-// Pruebas
 
+/*--------------------------------------------------------------------------------------------------------------------------------------*/
+
+// PRUEBAS
+
+//Se crea la instancia
 const instancia = new ProductManager();
+
+//Se agregan productos
 
 instancia.addProduct({
     title: "Casa 4 ambientes", 
@@ -64,5 +138,33 @@ instancia.addProduct({
 });
 
 
+// Se obtienen los productos en un array
 instancia.getProducts();
-console.log(instancia.getProductById(2));
+
+
+// Se devuelve un producto segun el Id en forma de objeto
+instancia.getProductById(2);
+
+
+// Se elimina un producto y luego de un delay se obtiene la lista de los restantes (el delay es para dar tiempo a las funciones asincronas)
+instancia.deleteProduct(3);
+setTimeout(() => {
+    instancia.getProducts();
+}, 2000);
+
+
+// Se actualiza un producto y luego de un delay se obtiene la lista con las actualizaciones (el delay es para dar tiempo a las funciones asincronas)
+setTimeout(() => {
+    instancia.updateProduct(1, {
+        title: "Departamento 3 ambientes", 
+        description: "Luminoso", 
+        price: 178000, 
+        thumbnail: "sin imagen", 
+        code: "456abc", 
+        stock: 2
+    } )
+}, 3000);
+
+setTimeout(() => {
+    instancia.getProducts();
+}, 4000);
