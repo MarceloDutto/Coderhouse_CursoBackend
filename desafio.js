@@ -1,15 +1,20 @@
 const fs = require("fs");
 
 class ProductManager {
-    constructor() {
+    constructor(path) {
         this.products = [];
         this.id = 1;
-        this.path = './products.json';
+        this.path = path;
     }
 
-    addProduct = ({title, description, price, thumbnail, code, stock}) => {
+    addProduct = async ({title, description, price, thumbnail, code, stock}) => {
         if(!title || !description || !price || !thumbnail || !code || !stock) return console.log('Producto no agregado: todos los campos son obligatorios');
-            
+
+        if(fs.existsSync(this.path)) {
+            const data = await fs.promises.readFile(this.path, 'utf-8');
+            this.products = JSON.parse(data);
+            }
+                   
         if(this.products.find(prod => prod.code === code)) return console.log('El producto ya está incluido en la base de datos, no se puede agregar nuevamente');
 
         const product = {
@@ -106,7 +111,7 @@ class ProductManager {
 // PRUEBAS
 
 //Se crea la instancia
-const instancia = new ProductManager();
+const instancia = new ProductManager('./products.json');
 
 //Se agregan productos
 
@@ -126,9 +131,9 @@ instancia.addProduct({
     thumbnail: "sin imagen", 
     code: "456abc", 
     stock: 2
-});
+}); 
 
-instancia.addProduct({
+ instancia.addProduct({
     title: "Monoambiente", 
     description: "Espacioso", 
     price: 90000, 
