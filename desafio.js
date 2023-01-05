@@ -3,20 +3,19 @@ const fs = require("fs");
 class ProductManager {
     constructor(path) {
         this.products = [];
-        this.id = 1;
         this.path = path;
     }
 
     addProduct = async ({title, description, price, thumbnail, code, stock}) => {
         if(!title || !description || !price || !thumbnail || !code || !stock) return console.log('Producto no agregado: todos los campos son obligatorios');
 
-        if(fs.existsSync(this.path)) {
-            const data = await fs.promises.readFile(this.path, 'utf-8');
-            this.products = JSON.parse(data);
-            }
+        await this.getProducts();
                    
         if(this.products.find(prod => prod.code === code)) return console.log('El producto ya está incluido en la base de datos, no se puede agregar nuevamente');
 
+        const IdArray = this.products.map(prod => prod.id);
+        const maxId = Math.max(...IdArray);
+        
         const product = {
             title,
             description,
@@ -24,12 +23,12 @@ class ProductManager {
             thumbnail,
             code,
             stock,
-            id: this.id
+            id: maxId === -Infinity ? 1 : maxId + 1
         }
-        this.id++
+        
         this.products.push(product);
 
-        const productStr = JSON.stringify(this.products);
+        const productStr = JSON.stringify(this.products, null, 2);
         fs.writeFile(this.path, productStr, error => {
             if(error) throw error;
         });
@@ -42,7 +41,7 @@ class ProductManager {
 
             const data = await fs.promises.readFile(this.path, 'utf-8');
             this.products = JSON.parse(data);
-            return this.products.length > 0 ? console.log(this.products) : console.log('La base de datos no contiene productos');
+            return this.products;
     }
 
     getProductById = async (idRef) => {
@@ -51,50 +50,48 @@ class ProductManager {
         const data = await fs.promises.readFile(this.path, 'utf-8');
         this.products = JSON.parse(data);
         const prodById = this.products.find(prod => prod.id === idRef)
-        return prodById ? console.log(prodById) : console.log('No se encontró el producto');
+        return prodById ? prodById : {};
     }
 
-    updateProduct = async (idRef, {title, description, price, thumbnail, code, stock}) => {
+    updateProduct = async (idRef, update) => {
         if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
 
-        if(!title || !description || !price || !thumbnail || !code || !stock) return console.log('Producto no actualizado: todos los campos son obligatorios');
-
-        const data = await fs.promises.readFile(this.path, 'utf-8');
-        this.products = JSON.parse(data);
-        const selectedProduct = this.products.find(prod => prod.id === idRef);
-                
-        const { id } = selectedProduct;
-        
+        const { title, description, price, thumbnail, code, stock } = update;
         const product = {
             title,
             description,
             price,
             thumbnail,
             code,
-            stock,
-            id: id
+            stock
         }
-        
-        const indexById = this.products.findIndex(prod => prod.id === idRef);
-        this.products.splice(indexById, 1);
-        this.products.push(product);
 
-        const productStr = JSON.stringify(this.products);
+        await this.getProducts();
+
+        const selectedProduct = await this.getProductById(idRef);
+
+        if(selectedProduct === undefined) return console.log('No se encontró el producto');
+        
+        Object.keys(update).forEach(key => {
+            if(product[key] && product[key] !== selectedProduct[key]) selectedProduct[key] = product[key];
+        })
+
+        const productStr = JSON.stringify(this.products, null, 2);
         fs.writeFile(this.path, productStr, error => {
             if(error) throw error;
         });
-        
     }
     
     deleteProduct = async (idRef) => {
         if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
 
-        const data = await fs.promises.readFile(this.path, 'utf-8');
-        this.products = JSON.parse(data);
+        await this.getProducts();
+        
         const indexById = this.products.findIndex(prod => prod.id === idRef);
+        if(indexById === -1) return console.log('No se encontró el producto');
         this.products.splice(indexById, 1);
 
-        const productStr = JSON.stringify(this.products);
+        const productStr = JSON.stringify(this.products, null, 2);
         fs.writeFile(this.path, productStr, error => {
             if(error) throw error;
         });
@@ -115,61 +112,33 @@ const instancia = new ProductManager('./products.json');
 
 //Se agregan productos
 
-instancia.addProduct({
-    title: "Casa 4 ambientes", 
-    description: "Con patio", 
-    price: 250000, 
-    thumbnail: "sin imagen", 
-    code: "123abc", 
-    stock: 1
-});
-
-instancia.addProduct({
-    title: "Departamento 3 ambientes", 
-    description: "Luminoso", 
-    price: 178000, 
-    thumbnail: "sin imagen", 
-    code: "456abc", 
-    stock: 2
-}); 
-
- instancia.addProduct({
-    title: "Monoambiente", 
-    description: "Espacioso", 
-    price: 90000, 
-    thumbnail: "sin imagen", 
-    code: "679abc", 
-    stock: 4
-});
-
-
-// Se obtienen los productos en un array
-instancia.getProducts();
-
-
-// Se devuelve un producto segun el Id en forma de objeto
-instancia.getProductById(2);
-
-
-// Se elimina un producto y luego de un delay se obtiene la lista de los restantes (el delay es para dar tiempo a las funciones asincronas)
-instancia.deleteProduct(3);
-setTimeout(() => {
-    instancia.getProducts();
-}, 2000);
-
-
-// Se actualiza un producto y luego de un delay se obtiene la lista con las actualizaciones (el delay es para dar tiempo a las funciones asincronas)
-setTimeout(() => {
-    instancia.updateProduct(1, {
+const main = async () => {
+    await instancia.addProduct({
+        title: "Casa 4 ambientes", 
+        description: "Con patio", 
+        price: 250000, 
+        thumbnail: "sin imagen", 
+        code: "123abc", 
+        stock: 1
+    });
+    
+    await instancia.addProduct({
         title: "Departamento 3 ambientes", 
         description: "Luminoso", 
         price: 178000, 
         thumbnail: "sin imagen", 
         code: "456abc", 
         stock: 2
-    } )
-}, 3000);
+    }); 
+    
+    await instancia.addProduct({
+        title: "Monoambiente", 
+        description: "Espacioso", 
+        price: 90000, 
+        thumbnail: "sin imagen", 
+        code: "679abc", 
+        stock: 4
+    });
+}
 
-setTimeout(() => {
-    instancia.getProducts();
-}, 4000);
+main()
