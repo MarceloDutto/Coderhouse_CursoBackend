@@ -1,0 +1,121 @@
+[
+    {
+        "id": 1,
+        "nombre": "Escritorio moderno Madrid", 
+        "categoria": "Escritorios",
+        "caracteristicas": "Fabricado en aglomerado recubierto en melamina de excelente calidad. Interior de cajones en melanina blanca, con fondo de cajón en Fibroplus. Correderas metálicas de primera calidad. Pies plásticos en la base de archivero para evitar el contacto con el piso. Bisagra de codo de excelente calidad.",  
+        "ancho": 142,
+        "alto": 78,
+        "profundidad": 55,
+        "imagen": "escritorio-1", 
+        "precio": "43.499,00"
+    },
+
+    {
+        "id": 2,
+        "nombre": "Escritorio para PC Roma", 
+        "categoria": "Escritorios",
+        "caracteristicas": "Cajones amplios con excelente profundidad para guardado de diferentes objetos de oficina, los mismos cuentan con corredera para su fácil deslizamiento. Fabricado en aglomerado recubierto en melamina de excelente calidad. Interioir de cajones en melanina blanca, con fondo de cajón en Fibroplus. Correderas metálicas de primera calidad. Pies plásticos en la base de archivero para evitar el contacto con el piso. Bisagra de codo de excelente calidad. Opcional con pasacables.",  
+        "ancho": 142,
+        "alto": 78,
+        "profundidad": 55,
+        "imagen": "escritorio-2", 
+        "precio": "50.860,00"
+    },
+
+    {
+        "id": 3,
+        "nombre": "Escritorio para PC doble Londres", 
+        "categoria": "Escritorios",
+        "caracteristicas": "Excelente para utilizar en oficinas como puestos de trabajo o en el hogar. Fabricado en aglomerado recubierto en melamina de excelente calidad. Interior de cajones en melanina blanca, con fondo de cajón en Fibroplus. Correderas metálicas de primera calidad. Pies plásticos en la base de archivero para evitar el contacto con el piso. Bisagra de codo de excelente calidad. Opcional con pasacables.",  
+        "ancho": 195,
+        "alto": 78,
+        "profundidad": 55,
+        "imagen": "escritorio-3", 
+        "precio": "92.490,00"
+    },
+
+    {
+        "id": 4,
+        "nombre": "Escritorio nordico Oslo", 
+        "categoria": "Escritorios",
+        "caracteristicas": "Ya sea para estudiar o trabajar, este escritorio nordico Oslo te ayudará a crear un ambiente confortable y sumar orden y funcionalidad a tus horas productivas. Su superficie no sólo te servirá de apoyo, sino que te permitirá tener los recursos al alcance de la mano para facilitar tus tareas.",  
+        "ancho": 120,
+        "alto": 75,
+        "profundidad": 40,
+        "imagen": "escritorio-4", 
+        "precio": "23.450,00"
+    },
+
+    {
+        "id": 5,
+        "nombre": "Escritorio Paris", 
+        "categoria": "Escritorios",
+        "caracteristicas": "Si miras por lo práctico por encima de todo, este escritorio es lo que estás buscando. En un espacio reducido podrás tener un puesto de ocio y trabajo para tu habitación que satisfará tus necesidades. En sus 5 cajones y su espacio abierto superior podrás guardar todos los elementos que debas tener a mano. Este escritorio es muy funcional y se adapta a cualquier lugar, por lo que no será un problema colocarlo en tu habitación.",  
+        "ancho": 110,
+        "alto": 75,
+        "profundidad": 48,
+        "imagen": "escritorio-5", 
+        "precio": "20.590,00"
+    },
+
+    {
+        "id": 6,
+        "nombre": "Estanteria Estambul", 
+        "categoria": "Estanterias",
+        "caracteristicas": "Muy ligera, siendo ideal para salones pequeños, está hecha de madera sin tratar, siendo perfecta para lijarla y pintarla para customizarla y disfrutar de una estantería única. ",  
+        "ancho": 70,
+        "alto": 154,
+        "profundidad": 34,
+        "imagen": "estanteria-1", 
+        "precio": "11.270,00"
+    },
+
+    {
+        "id": 7,
+        "nombre": "Estanteria estilo nórdico Estocolmo", 
+        "categoria": "Estanterias",
+        "caracteristicas": "Según su necesidad puede utilizar los módulos que sean de su agrado en forma independiente o combinando las columnas, y entre ellas colocar estantes de medida a elección. Se puede utilizar como separador de ambiente.",  
+        "ancho": 100,
+        "alto": 180,
+        "profundidad": 45,
+        "imagen": "estanteria-2", 
+        "precio": "31.890,00"
+    },
+
+    {
+        "id": 8,
+        "nombre": "Estanteria alta Mediterráneo", 
+        "categoria": "Estanterias",
+        "caracteristicas": "Toda la estructura es de caño de 24mm de espesor, pintada con opción negro o blanco. Los estantes son de melamina con bordes finos de abs.",  
+        "ancho": 60,
+        "alto": 140,
+        "profundidad": 34,
+        "imagen": "estanteria-3", 
+        "precio": "36.600,00"
+    },
+
+    {
+        "id": 9,
+        "nombre": "Estanteria alta Aspen blanca", 
+        "categoria": "Estanterias",
+        "caracteristicas": "Biblioteca en melamina blanca y madera de paraíso natural, que incluye tratamiento de lustre satinado. Los materiales son de primera calidad, que incluyen tapa cantos de PVC pegados a 180°, con una exclusiva máquina importada. Tiene 6 estantes.",  
+        "ancho": 60,
+        "alto": 180,
+        "profundidad": 30,
+        "imagen": "estanteria-4", 
+        "precio": "28.724,00"
+    },
+
+    {
+        "id": 10,
+        "nombre": "Estanteria alta Aspen negra", 
+        "categoria": "Estanterias",
+        "caracteristicas": "Biblioteca en melamina negra y madera de paraíso natural, que incluye tratamiento de lustre satinado. Los materiales son de primera calidad, que incluyen tapa cantos de PVC pegados a 180°, con una exclusiva máquina importada. Tiene 6 estantes.",  
+        "ancho": 60,
+        "alto": 180,
+        "profundidad": 30,
+        "imagen": "estanteria-5", 
+        "precio": "28.724,00"
+    }
+]

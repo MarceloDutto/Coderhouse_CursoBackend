@@ -1,6 +1,6 @@
-const fs = require("fs");
+import { writeFile, existsSync, promises } from "fs";
 
-class ProductManager {
+export class ProductManager {
     constructor(path) {
         this.products = [];
         this.path = path;
@@ -29,7 +29,7 @@ class ProductManager {
         this.products.push(product);
 
         const productStr = JSON.stringify(this.products, null, 2);
-        fs.writeFile(this.path, productStr, error => {
+        writeFile(this.path, productStr, error => {
             if(error) throw error;
         });
 
@@ -37,24 +37,24 @@ class ProductManager {
     }
 
     getProducts = async () => {
-            if(!fs.existsSync(this.path)) return [];
+            if(!existsSync(this.path)) return [];
 
-            const data = await fs.promises.readFile(this.path, 'utf-8');
+            const data = await promises.readFile(this.path, 'utf-8');
             this.products = JSON.parse(data);
             return this.products;
     }
 
     getProductById = async (idRef) => {
-        if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
+        if(!existsSync(this.path)) return console.log('No se encontró la base de datos');
 
-        const data = await fs.promises.readFile(this.path, 'utf-8');
+        const data = await promises.readFile(this.path, 'utf-8');
         this.products = JSON.parse(data);
         const prodById = this.products.find(prod => prod.id === idRef)
         return prodById ? prodById : {};
     }
 
     updateProduct = async (idRef, update) => {
-        if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
+        if(!existsSync(this.path)) return console.log('No se encontró la base de datos');
 
         const { title, description, price, thumbnail, code, stock } = update;
         const product = {
@@ -68,7 +68,7 @@ class ProductManager {
 
         await this.getProducts();
 
-        const selectedProduct = await this.getProductById(idRef);
+        const selectedProduct = this.products.find(prod => prod.id === idRef);
 
         if(selectedProduct === undefined) return console.log('No se encontró el producto');
         
@@ -77,13 +77,13 @@ class ProductManager {
         })
 
         const productStr = JSON.stringify(this.products, null, 2);
-        fs.writeFile(this.path, productStr, error => {
+        writeFile(this.path, productStr, error => {
             if(error) throw error;
         });
     }
     
     deleteProduct = async (idRef) => {
-        if(!fs.existsSync(this.path)) return console.log('No se encontró la base de datos');
+        if(!existsSync(this.path)) return console.log('No se encontró la base de datos');
 
         await this.getProducts();
         
@@ -92,7 +92,7 @@ class ProductManager {
         this.products.splice(indexById, 1);
 
         const productStr = JSON.stringify(this.products, null, 2);
-        fs.writeFile(this.path, productStr, error => {
+        writeFile(this.path, productStr, error => {
             if(error) throw error;
         });
 
@@ -108,11 +108,11 @@ class ProductManager {
 // PRUEBAS
 
 //Se crea la instancia
-const instancia = new ProductManager('./products.json');
+//const instancia = new ProductManager('./products.json');
 
 //Se agregan productos
 
-const main = async () => {
+/* const main = async () => {
     await instancia.addProduct({
         title: "Casa 4 ambientes", 
         description: "Con patio", 
@@ -141,4 +141,4 @@ const main = async () => {
     });
 }
 
-main()
+main() */
